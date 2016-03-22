@@ -1,43 +1,31 @@
-'use strict';
-const Generator = require('yeoman-generator');
-const chalk = require('chalk');
-const yosay = require('yosay');
-const _ = require('lodash');
-const extend = require('deep-extend');
-const http = require('http');
-const fs = require('fs');
+var Generator = require('yeoman-generator');
+var chalk = require('chalk');
+var yosay = require('yosay');
+var path = require('path');
+var _ = require('lodash');
+var mkdirp = require('mkdirp');
+var extend = require('deep-extend');
+var fs = require('fs');
+var http = require('http');
 
 module.exports = class extends Generator {
-  default() {
-    const readmeTpl = _.template(this.fs.read(this.templatePath('README.md')));
-
-    this.composeWith(require.resolve('generator-node/generators/app'), {
-      boilerplate: false,
-      cli: false,
-      editorconfig: true,
-      git: true,
-      license: true,
-      travis: true,
-      coveralls: false,
-      readme: readmeTpl({
-        componentName: this.props.name,
-        componentTitle: this.props.title,
-        componentDescription: this.props.description
-      })
-    });
+  initializing() {
+    this.props = {};
   }
 
   prompting() {
+    var done = this.async();
+
     // Have Yeoman greet the user.
     this.log(yosay(
       'Welcome to the ' + chalk.red('elastic.io component') + ' generator!'
     ));
 
-    const prompts = [{
+    var prompts = [{
       type: 'input',
       name: 'title',
       message: 'Please enter a component descriptive name (title)',
-      default: 'My API',
+      default: "My API",
       validate: function (str) {
         return str.length > 0;
       }
@@ -45,41 +33,75 @@ module.exports = class extends Generator {
       type: 'input',
       name: 'description',
       message: 'Please enter a component description',
-      default: 'My component that speaks to my API'
+      default: "My component that speaks to my API"
     }];
 
-    return this.prompt(prompts).then(props => {
-      // To access props later use this.props.someAnswer;
+    this.prompt(prompts, function (props) {
       this.props = props;
+      console.log(props.title);
+      this.props.name = _.kebabCase(props.title);
+      this.props.name = this.props.name.indexOf('-component') > 0 ?
+        this.props.name : this.props.name + '-component';
+      done();
+    }.bind(this));
+  }
+
+  default() {
+    if (path.basename(this.destinationPath()) !== this.props.name) {
+      this.log(
+        'Your component must be inside a folder named ' + this.props.name + '\n' +
+        'I\'ll automatically create this folder.'
+      );
+      mkdirp(this.props.name);
+      this.destinationRoot(this.destinationPath(this.props.name));
+    }
+
+    var readmeTpl = _.template(this.fs.read(this.templatePath('README.md')));
+
+    this.composeWith('node:app', {
+      options: {
+        babel: false,
+        boilerplate: false,
+        name: this.props.name,
+        keywords: false,
+        description: this.props.description,
+        lint: false,
+        gulp: false,
+        coveralls: false,
+        cli: false,
+        skipInstall: this.options.skipInstall,
+        githubAccount: false,
+        readme: readmeTpl({
+          componentName: this.props.name,
+          componentTitle: this.props.title,
+          componentDescription: this.props.description
+        })
+      }
+    }, {
+      local: require('generator-node').app
     });
   }
 
   writing() {
-    const pkg = this.fs.readJSON(this.destinationPath('package.json'), {});
+    var pkg = this.fs.readJSON(this.destinationPath('package.json'), {});
     extend(pkg, {
       dependencies: {
-        'elasticio-sailor-nodejs': '^2.2.0',
-        'elasticio-node': '^0.0.8',
-        'request-promise': '^4.2.1'
+        "co": "^4.6.0",
+        "request": "^2.75.0",
+        "request-promise": "^4.1.1",
+        "elasticio-sailor-nodejs": "2.1.0",
+        "elasticio-node": "0.0.8"
       },
-      engines: {
-        node: '8.5.0'
+      "scripts": {
+        "pretest": "node_modules/.bin/eslint lib spec Gruntfile.js --ext .json --ext .js --fix",
+        "test": "NODE_ENV=test grunt"
       },
-      scripts: {
-        pretest: 'node_modules/.bin/eslint lib spec spec-integration --ext .json --ext .js --fix',
-        test: 'NODE_ENV=test jest spec/*',
-        'integration-test': 'NODE_ENV=test jest spec-integration/*'
-      },
-      devDependencies: {
-        eslint: '^4.7.0',
-        'eslint-config-xo-space': '^0.16.0',
-        'eslint-plugin-json': '^1.2.0'
-      },
-      eslintConfig: {
-        extends: 'xo-space',
-        env: {
-          jest: true
-        }
+      "devDependencies": {
+        "eslint": "^2.1.0",
+        "eslint-config-xo-space": "^0.10.0",
+        "eslint-plugin-json": "^1.2.0",
+        "grunt": "^1.0.1",
+        "grunt-jasmine-node": "^0.3.1"
       }
     });
     pkg.keywords = pkg.keywords || [];
@@ -87,7 +109,7 @@ module.exports = class extends Generator {
 
     this.fs.writeJSON(this.destinationPath('package.json'), pkg);
 
-    const component = this.fs.readJSON(this.templatePath('component.json'));
+    var component = this.fs.readJSON(this.templatePath('component.json'));
     component.title = this.props.title;
     component.description = this.props.description;
     this.fs.writeJSON(this.destinationPath('component.json'), component);
@@ -98,23 +120,25 @@ module.exports = class extends Generator {
     );
 
     this.fs.copy(
+      this.templatePath('Gruntfile.js'),
+      this.destinationPath('Gruntfile.js')
+    );
+
+    this.fs.copy(
       this.templatePath('.eslintrc.js'),
       this.destinationPath('.eslintrc.js')
     );
 
-    const color = ((1 << 24) * Math.random() | 0).toString(16);
-    const iconURL = 'http://dummyimage.com/64x64/' + color + '/fff.png&text=' + this.props.title.split(' ')[0];
-    const file = fs.createWriteStream(this.destinationPath('logo.png'));
+    // Create and download icon
+    var color = ((1 << 24) * Math.random() | 0).toString(16);
+    var iconURL = "http://dummyimage.com/64x64/" + color + "/fff.png&text=" + this.props.title.split(' ')[0];
+    var file = fs.createWriteStream(this.destinationPath('logo.png'));
     http.get(iconURL, function (response) {
       response.pipe(file);
     });
   }
 
   install() {
-    this.installDependencies({
-      npm: true,
-      bower: false,
-      yarn: false
-    });
+    this.installDependencies();
   }
 };

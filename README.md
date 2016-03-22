@@ -1,5 +1,5 @@
-# generator-elasticio [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url] [![Coverage percentage][coveralls-image]][coveralls-url]
-> Generator for elastic.io integration component
+# generator-elasticio [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url]
+> elastic.io component generator
 
 ## Installation
 
@@ -16,16 +16,69 @@ Then generate your new project:
 yo elasticio
 ```
 
-## Getting To Know Yeoman
+## Usage
 
- * Yeoman has a heart of gold.
- * Yeoman is a person with feelings and opinions, but is very easy to work with.
- * Yeoman can be too opinionated at times but is easily convinced not to be.
- * Feel free to [learn more about Yeoman](http://yeoman.io/).
+```bash
+yo elasticio
+```
+
+*Note that this template will generate create a new directory in your 
+current directory, so no files will be overwritten or modified.*
+
+This will generate a new Node project with following content:
+
+- Filled `package.json` file as part of your NPM module
+- `.gitignore` with defaults for node.js project
+- `component.json` file with basic structure and simple credentials 
+- `README.md` will give you some inspiration
+- `logo.png` that will be randomly generated
+- [Travis CI](https://travis-ci.org/) continuous integration (optional)
+- [License](https://spdx.org/licenses/)
+
+After that you can just go to the newly generated directory, add it to
+git and push it to elastic.io (don't forget to create a repo on elastic.io
+before)
+
+```bash
+cd my-api-component
+git init .
+git add *
+git commit -a -m 'Initial import'
+git remote add elasticio team@git.elastic.io:repository-name.git
+git push elasticio master
+```
+
+What's included in the output:
+- Extends the node.js generator project with necessary dependencies
+- Simple ``component.json`` with credentials defined
+- Dynamically generated logo
+- Account verification hook via ``verifyCredentials.js``
+- Samle README with some bages
+
+## Subgenerators
+
+### Component Action
+
+You can easily scaffold necessary files for a component's action, just 
+use following command inside the component's directory
+
+```bash
+yo elasticio:action
+```
+In the process of defining the action you may chose what type of metadata shall it support, etc.
+
+### Component Trigger
+
+You can easily scaffold necessary files for a component's trigger, just 
+use following command inside the component's directory
+
+```bash
+yo elasticio:trigger
+```
 
 ## License
 
-Apache-2.0 © [elasticio](https://elastic.io)
+Apache-2.0 © [elastic.io GmbH](http://www.elastic.io)
 
 
 [npm-image]: https://badge.fury.io/js/generator-elasticio.svg
@@ -34,5 +87,3 @@ Apache-2.0 © [elasticio](https://elastic.io)
 [travis-url]: https://travis-ci.org/elasticio/generator-elasticio
 [daviddm-image]: https://david-dm.org/elasticio/generator-elasticio.svg?theme=shields.io
 [daviddm-url]: https://david-dm.org/elasticio/generator-elasticio
-[coveralls-image]: https://coveralls.io/repos/elasticio/generator-elasticio/badge.svg
-[coveralls-url]: https://coveralls.io/r/elasticio/generator-elasticio
