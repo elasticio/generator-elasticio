@@ -1,5 +1,5 @@
-# generator-elasticio [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url] [![Coverage percentage][coveralls-image]][coveralls-url]
-> Generator for elastic.io integration component
+# generator-elasticio [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url]
+> elastic.io component generator
 
 ## Installation
 
@@ -18,14 +18,11 @@ yo elasticio
 
 ## Getting To Know Yeoman
 
- * Yeoman has a heart of gold.
- * Yeoman is a person with feelings and opinions, but is very easy to work with.
- * Yeoman can be too opinionated at times but is easily convinced not to be.
- * Feel free to [learn more about Yeoman](http://yeoman.io/).
+Yeoman has a heart of gold. He&#39;s a person with feelings and opinions, but he&#39;s very easy to work with. If you think he&#39;s too opinionated, he can be easily convinced. Feel free to [learn more about him](http://yeoman.io/).
 
 ## License
 
-Apache-2.0 © [elasticio](https://elastic.io)
+Apache-2.0 © [elastic.io GmbH](http://www.elastic.io)
 
 
 [npm-image]: https://badge.fury.io/js/generator-elasticio.svg
@@ -34,5 +31,3 @@ Apache-2.0 © [elasticio](https://elastic.io)
 [travis-url]: https://travis-ci.org/elasticio/generator-elasticio
 [daviddm-image]: https://david-dm.org/elasticio/generator-elasticio.svg?theme=shields.io
 [daviddm-url]: https://david-dm.org/elasticio/generator-elasticio
-[coveralls-image]: https://coveralls.io/repos/elasticio/generator-elasticio/badge.svg
-[coveralls-url]: https://coveralls.io/r/elasticio/generator-elasticio
