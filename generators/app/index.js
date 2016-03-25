@@ -111,7 +111,7 @@ module.exports = yeoman.Base.extend({
 
     // Create and download icon
     var color = ((1<<24)*Math.random()|0).toString(16);
-    var iconURL = "http://dummyimage.com/64x64/" + color + "/fff.png&text=" + this.props.name;
+    var iconURL = "http://dummyimage.com/64x64/" + color + "/fff.png&text=" + this.props.title.split(' ')[0]
     var file = fs.createWriteStream(this.destinationPath('logo.png'));
     http.get(iconURL, function(response) {
       response.pipe(file);
