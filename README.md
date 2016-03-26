@@ -28,7 +28,7 @@ current directory, so no files will be overwritten or modified.*
 This will generate a new Node project with following content:
 
 - Filled `package.json` file as part of your NPM module
-- .gitignore with defaults for node.js project
+- `.gitignore` with defaults for node.js project
 - `component.json` file with basic structure and simple credentials 
 - `README.md` will give you some inspiration
 - `logo.png` that will be randomly generated
