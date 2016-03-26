@@ -16,9 +16,49 @@ Then generate your new project:
 yo elasticio
 ```
 
-## Getting To Know Yeoman
+## Usage
 
-Yeoman has a heart of gold. He&#39;s a person with feelings and opinions, but he&#39;s very easy to work with. If you think he&#39;s too opinionated, he can be easily convinced. Feel free to [learn more about him](http://yeoman.io/).
+```bash
+yo elasticio
+```
+
+*Note that this template will generate create a new directory in your 
+current directory, so no files will be overwritten or modified.*
+
+This will generate a new Node project with following content:
+
+- Filled `package.json` file as part of your NPM module
+- .gitignore with defaults for node.js project
+- `component.json` file with basic structure and simple credentials 
+- `README.md` will give you some inspiration
+- `logo.png` that will be randomly generated
+- [Travis CI](https://travis-ci.org/) continuous integration (optional)
+- [License](https://spdx.org/licenses/)
+
+After that you can just go to the newly generated directory, add it to
+git and push it to elastic.io (don't forget to create a repo on elastic.io
+before)
+
+```bash
+cd my-api-component
+git init .
+git add *
+git commit -a -m 'Initial import'
+git remote add elasticio team@git.elastic.io:repository-name.git
+git push elasticio master
+```
+
+
+## Subgenerators
+
+### Component Action
+
+You can easily scaffold necessary files for a component's action, just 
+use following command inside the component's directory
+
+```bash
+yo elasticio:action
+```
 
 ## License
 
