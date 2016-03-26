@@ -2,21 +2,49 @@
 var yeoman = require('yeoman-generator');
 var chalk = require('chalk');
 var yosay = require('yosay');
+var _ = require('lodash');
+var mkdirp = require('mkdirp');
+var path = require('path');
+var fs = require('fs');
 
-module.exports = yeoman.generators.Base.extend({
+module.exports = yeoman.Base.extend({
+  initializing: function() {
+    try {
+      fs.accessSync(this.destinationPath('component.json'));
+      this.compDesc = this.fs.readJSON(this.destinationPath('component.json'), {});
+      // Have Yeoman greet the user.
+      this.log(yosay(
+        'Welcome to the ' + chalk.red('elastic.io action ') + ' generator!'
+      ));
+      this.log('Loaded component descriptor from %s', this.destinationPath('component.json'));
+    } catch (error) {
+      this.log(yosay('I can not find ' + chalk.red('component.json') + ' in the current directory, ' +
+        'please run elasticio:action in the component root folder'));
+      throw error;
+    }
+  },
   prompting: function () {
     var done = this.async();
-
-    // Have Yeoman greet the user.
-    this.log(yosay(
-      'Welcome to the astounding ' + chalk.red('generator-elasticio') + ' generator!'
-    ));
+    var compDesc = this.compDesc;
 
     var prompts = [{
-      type: 'confirm',
-      name: 'someOption',
-      message: 'Would you like to enable this option?',
-      default: true
+      type: 'input',
+      name: 'title',
+      message: 'Please enter an actions title',
+      default: "Upsert Something",
+      validate: function (str) {
+        return str.length > 0;
+      }
+    }, {
+      type: 'input',
+      name: 'id',
+      message: 'Please enter an action ID',
+      default: function (answers) {
+        return _.camelCase(answers.title);
+      },
+      validate: function (str) {
+        return str.length > 0;
+      }
     }];
 
     this.prompt(prompts, function (props) {
@@ -28,13 +56,39 @@ module.exports = yeoman.generators.Base.extend({
   },
 
   writing: function () {
-    this.fs.copy(
-      this.templatePath('dummyfile.txt'),
-      this.destinationPath('dummyfile.txt')
-    );
-  },
+    var id = this.props.id;
+    var actions = {};
+    if (!this.compDesc['action']) {
 
-  install: function () {
-    this.installDependencies();
+    }
+    this.compDesc[this.props.id] = {
+      "main": "./lib/actions/" + id + '.js',
+      "title": this.props.title,
+      "metadata": {
+        "in": "./lib/schemas/" + id + ".in.json",
+        "out": "./lib/schemas/"  + id + ".out.json"
+      }
+    };
+
+    this.log('Creating action code file');
+    mkdirp('lib/actions');
+    this.fs.copy(
+      this.templatePath('actionStatic.js'),
+      this.destinationPath('lib/actions/' + id + 'js')
+    );
+
+    this.log('Creating schema files');
+    mkdirp('lib/schemas');
+    this.fs.copy(
+      this.templatePath('action.in.json'),
+      this.destinationPath('lib/schemas/' + id + '.in.json')
+    );
+    this.fs.copy(
+      this.templatePath('action.out.json'),
+      this.destinationPath('lib/schemas/' + id + '.out.json')
+    );
+    this.fs.writeJSON(this.destinationPath('component.json'), this.compDesc);
+    this.log('Updated component descriptor');
   }
+
 });
