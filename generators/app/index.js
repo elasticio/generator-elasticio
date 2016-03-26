@@ -9,7 +9,6 @@ var extend = require('deep-extend');
 var fs = require('fs');
 var http = require('http');
 
-
 module.exports = yeoman.Base.extend({
   initializing: function () {
     this.props = {};
@@ -110,10 +109,10 @@ module.exports = yeoman.Base.extend({
     this.fs.writeJSON(this.destinationPath('component.json'), component);
 
     // Create and download icon
-    var color = ((1<<24)*Math.random()|0).toString(16);
-    var iconURL = "http://dummyimage.com/64x64/" + color + "/fff.png&text=" + this.props.title.split(' ')[0]
+    var color = ((1 << 24) * Math.random() | 0).toString(16);
+    var iconURL = "http://dummyimage.com/64x64/" + color + "/fff.png&text=" + this.props.title.split(' ')[0];
     var file = fs.createWriteStream(this.destinationPath('logo.png'));
-    http.get(iconURL, function(response) {
+    http.get(iconURL, function (response) {
       response.pipe(file);
     });
 
