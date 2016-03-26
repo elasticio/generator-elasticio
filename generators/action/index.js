@@ -4,11 +4,10 @@ var chalk = require('chalk');
 var yosay = require('yosay');
 var _ = require('lodash');
 var mkdirp = require('mkdirp');
-var path = require('path');
 var fs = require('fs');
 
 module.exports = yeoman.Base.extend({
-  initializing: function() {
+  initializing: function () {
     try {
       fs.accessSync(this.destinationPath('component.json'));
       this.compDesc = this.fs.readJSON(this.destinationPath('component.json'), {});
@@ -25,7 +24,6 @@ module.exports = yeoman.Base.extend({
   },
   prompting: function () {
     var done = this.async();
-    var compDesc = this.compDesc;
 
     var prompts = [{
       type: 'input',
@@ -58,15 +56,17 @@ module.exports = yeoman.Base.extend({
   writing: function () {
     var id = this.props.id;
     var actions = {};
-    if (!this.compDesc['action']) {
-
+    if (this.compDesc.actions) {
+      actions = this.compDesc.actions;
+    } else {
+      this.compDesc.actions = actions;
     }
-    this.compDesc[this.props.id] = {
-      "main": "./lib/actions/" + id + '.js',
-      "title": this.props.title,
-      "metadata": {
-        "in": "./lib/schemas/" + id + ".in.json",
-        "out": "./lib/schemas/"  + id + ".out.json"
+    actions[this.props.id] = {
+      main: "./lib/actions/" + id + '.js',
+      title: this.props.title,
+      metadata: {
+        in: "./lib/schemas/" + id + ".in.json",
+        out: "./lib/schemas/" + id + ".out.json"
       }
     };
 

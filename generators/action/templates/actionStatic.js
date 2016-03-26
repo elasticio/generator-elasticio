@@ -1,3 +1,4 @@
+/* eslint new-cap: [2, {"capIsNewExceptions": ["Q"]}] */
 var Q = require('q');
 var elasticio = require('elasticio-node');
 var messages = elasticio.messages;
@@ -15,7 +16,6 @@ function processAction(msg, cfg) {
   var name = cfg.name;
 
   function emitData() {
-
     console.log('About to say hello to ' + name + ' again');
 
     var body = {
@@ -41,5 +41,4 @@ function processAction(msg, cfg) {
   }
 
   Q().then(emitData).fail(emitError).done(emitEnd);
-
 }
