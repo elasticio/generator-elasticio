@@ -57,22 +57,22 @@ function getMetaModel(cfg, cb) {
   // it is configured in component.json
   cb(null, {
     in: {
-      "type": "object",
-      "properties": {
-        "inValue": {
-          "type": "string",
-          "required": true,
-          "title": "Input Value"
+      type: "object",
+      properties: {
+        inValue: {
+          type: "string",
+          required: true,
+          title: "Input Value"
         }
       }
     },
     out: {
-      "type": "object",
-      "properties": {
-        "outValue": {
-          "type": "string",
-          "required": true,
-          "title": "Output Value"
+      type: "object",
+      properties: {
+        outValue: {
+          type: "string",
+          required: true,
+          title: "Output Value"
         }
       }
     }
