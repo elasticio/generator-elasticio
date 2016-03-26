@@ -62,8 +62,8 @@ module.exports = yeoman.Base.extend({
       this.compDesc.actions = actions;
     }
     actions[this.props.id] = {
-      main: "./lib/actions/" + id + '.js',
       title: this.props.title,
+      main: "./lib/actions/" + id + '.js',
       metadata: {
         in: "./lib/schemas/" + id + ".in.json",
         out: "./lib/schemas/" + id + ".out.json"
@@ -74,7 +74,7 @@ module.exports = yeoman.Base.extend({
     mkdirp('lib/actions');
     this.fs.copy(
       this.templatePath('actionStatic.js'),
-      this.destinationPath('lib/actions/' + id + 'js')
+      this.destinationPath('lib/actions/' + id + '.js')
     );
 
     this.log('Creating schema files');
