@@ -43,6 +43,22 @@ module.exports = yeoman.Base.extend({
       validate: function (str) {
         return str.length > 0;
       }
+    }, {
+      type: 'list',
+      name: 'mType',
+      message: 'Please select the type of the metadata',
+      choices: [
+        {
+          name: 'Static (known at design time)',
+          short: 'Static',
+          value: 'Static'
+        },
+        {
+          name: 'Dynamic (fetched at run time)',
+          short: 'Dynamic',
+          value: 'Dynamic'
+        }
+      ]
     }];
 
     this.prompt(prompts, function (props) {
@@ -63,30 +79,36 @@ module.exports = yeoman.Base.extend({
     }
     actions[this.props.id] = {
       title: this.props.title,
-      main: "./lib/actions/" + id + '.js',
-      metadata: {
+      main: "./lib/actions/" + id + '.js'
+    };
+    if (this.props.mType === 'Static') {
+      actions[this.props.id].metadata = {
         in: "./lib/schemas/" + id + ".in.json",
         out: "./lib/schemas/" + id + ".out.json"
-      }
-    };
+      };
+    } else {
+      actions[this.props.id].dynamicMetadata = true;
+    }
 
     this.log('Creating action code file');
     mkdirp('lib/actions');
     this.fs.copy(
-      this.templatePath('actionStatic.js'),
+      this.templatePath('action' + this.props.mType + '.js'),
       this.destinationPath('lib/actions/' + id + '.js')
     );
 
-    this.log('Creating schema files');
-    mkdirp('lib/schemas');
-    this.fs.copy(
-      this.templatePath('action.in.json'),
-      this.destinationPath('lib/schemas/' + id + '.in.json')
-    );
-    this.fs.copy(
-      this.templatePath('action.out.json'),
-      this.destinationPath('lib/schemas/' + id + '.out.json')
-    );
+    if (this.props.mType === 'Static') {
+      this.log('Creating schema files');
+      mkdirp('lib/schemas');
+      this.fs.copy(
+        this.templatePath('action.in.json'),
+        this.destinationPath('lib/schemas/' + id + '.in.json')
+      );
+      this.fs.copy(
+        this.templatePath('action.out.json'),
+        this.destinationPath('lib/schemas/' + id + '.out.json')
+      );
+    }
     this.fs.writeJSON(this.destinationPath('component.json'), this.compDesc);
     this.log('Updated component descriptor');
   }
