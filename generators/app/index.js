@@ -94,7 +94,7 @@ module.exports = yeoman.Base.extend({
     extend(pkg, {
       dependencies: {
         "q": "^1.4.1",
-        "elasticio-sailor-nodejs": "1.1.2",
+        "elasticio-sailor-nodejs": "1.2.1",
         "elasticio-node": "0.0.5"
       }
     });
