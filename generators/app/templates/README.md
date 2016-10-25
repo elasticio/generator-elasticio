@@ -1,7 +1,7 @@
 # <%- componentName %>
-> <%- componentTitle %> component for the [elastic.io platform](http://www.elastic.io "elastic.io platform")
+<%- componentTitle %> component for the [elastic.io platform](http://www.elastic.io "elastic.io platform")
 
-<%- componentDescription ->. If you plan to **deploy it into [elastic.io platform](http://www.elastic.io "elastic.io platform") you must follow sets of instructions to succseed**. 
+If you plan to **deploy it into [elastic.io platform](http://www.elastic.io "elastic.io platform") you must follow sets of instructions to succseed**. 
 
 ## Before you Begin
 
@@ -23,9 +23,34 @@ Now as you have a team name and component repository name you can add a new git 
 $ git remote add elasticio your-team@git.elastic.io:your-repository.git
 ```
 
-Obviously the naming of your team and repository is entierly upto you and if you do not put any corresponding naming our system will auto generate it for you but the naming might not entierly correspond to your project requirements.
+Obviously the naming of your team and repository is entirely upto you and if you do not put any corresponding naming our system will auto generate it for you but the naming might not entirely correspond to your project requirements.
 Now we are ready to push it:
 
 ```bash
 $ git push elasticio master
 ```
+
+## Authentication
+
+Authentication is happening via OAuth2.0. In order to make OAuth work you need a new App in your XXX. 
+During app creation process you will be asked to specify
+the callback URL, to process OAuth auehtncation via elastic.io platform your callback URL should be 
+
+```
+https://your-tenant.elastic.io/callback/oauth2
+```
+
+If you are testing it on default public tenant just use ``https://app.elastic.io/callback/oauth2``
+
+
+## Configure OAuth Client key/secret
+
+In the component repository you need to specify OAuth Client credentials as environment variables. You would need two variables
+
+ * ```XXX_KEY``` - your OAuth client key
+ * ```XXX_SECRET``` - your OAUth client secret
+ 
+## Known issues
+
+No known issues are there yet.
+

@@ -68,7 +68,6 @@ module.exports = yeoman.Base.extend({
       done();
     }.bind(this));
   },
-
   writing: function () {
     var id = this.props.id;
     var actions = {};
