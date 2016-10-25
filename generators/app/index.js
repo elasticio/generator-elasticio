@@ -41,8 +41,6 @@ module.exports = yeoman.Base.extend({
       this.props = props;
       console.log(props.title);
       this.props.name = _.kebabCase(props.title);
-      this.props.name = this.props.name.indexOf('-component') > 0 ?
-        this.props.name : this.props.name + '-component';
       done();
     }.bind(this));
   },
@@ -82,19 +80,17 @@ module.exports = yeoman.Base.extend({
       local: require('generator-node').app
     });
 
-    // this.composeWith('generator:subgenerator', {
-    //   arguments: ['app']
-    // }, {
-    //   local: require.resolve('../subgenerator')
-    // });
   },
 
   writing: function () {
     var pkg = this.fs.readJSON(this.destinationPath('package.json'), {});
     extend(pkg, {
       dependencies: {
-        "q": "^1.4.1",
-        "elasticio-sailor-nodejs": "1.2.1",
+        "co": "^4.6.0",
+        "bluebird": "^3.4.6",
+        "request": "^2.75.0",
+        "request-promise": "^4.1.1",
+        "elasticio-sailor-nodejs": "1.3.0",
         "elasticio-node": "0.0.5"
       }
     });
@@ -108,6 +104,11 @@ module.exports = yeoman.Base.extend({
     component.description = this.props.description;
     this.fs.writeJSON(this.destinationPath('component.json'), component);
 
+    this.fs.copy(
+      this.templatePath('verifyCredentials.js'),
+      this.destinationPath('verifyCredentials.js')
+    );
+
     // Create and download icon
     var color = ((1 << 24) * Math.random() | 0).toString(16);
     var iconURL = "http://dummyimage.com/64x64/" + color + "/fff.png&text=" + this.props.title.split(' ')[0];
@@ -115,11 +116,6 @@ module.exports = yeoman.Base.extend({
     http.get(iconURL, function (response) {
       response.pipe(file);
     });
-
-    // this.fs.copy(
-    //   this.templatePath('dummyfile.txt'),
-    //   this.destinationPath('dummyfile.txt')
-    // );
   },
 
   install: function () {
