@@ -55,10 +55,10 @@ module.exports = yeoman.generators.Base.extend({
   writing: function () {
     var id = this.props.id;
     var triggers = {};
-    if (this.compDesc.trigers) {
-      triggers = this.compDesc.trigers;
+    if (this.compDesc.triggers) {
+      triggers = this.compDesc.triggers;
     } else {
-      this.compDesc.trigers = triggers;
+      this.compDesc.triggers = triggers;
     }
     triggers[this.props.id] = {
       title: this.props.title,
