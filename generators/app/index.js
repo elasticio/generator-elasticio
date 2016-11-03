@@ -79,7 +79,6 @@ module.exports = yeoman.Base.extend({
     }, {
       local: require('generator-node').app
     });
-
   },
 
   writing: function () {
