@@ -48,6 +48,12 @@ git remote add elasticio team@git.elastic.io:repository-name.git
 git push elasticio master
 ```
 
+What's included in the output:
+- Extends the node.js generator project with necessary dependencies
+- Simple ``component.json`` with credentials defined
+- Dynamically generated logo
+- Account verification hook via ``verifyCredentials.js``
+- Samle README with some bages
 
 ## Subgenerators
 
@@ -58,6 +64,16 @@ use following command inside the component's directory
 
 ```bash
 yo elasticio:action
+```
+In the process of defining the action you may chose what type of metadata shall it support, etc.
+
+### Component Trigger
+
+You can easily scaffold necessary files for a component's trigger, just 
+use following command inside the component's directory
+
+```bash
+yo elasticio:trigger
 ```
 
 ## License
