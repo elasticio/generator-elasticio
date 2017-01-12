@@ -145,7 +145,7 @@ module.exports = {
       'before'
     ],
     'no-console': [
-      0,
+      WARN,
       {
         'allow': [
           'warn',
