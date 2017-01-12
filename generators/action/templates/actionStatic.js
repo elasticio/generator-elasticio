@@ -1,4 +1,4 @@
-'use strict';
+/*eslint no-invalid-this: 0 no-console: 0*/
 const eioUtils = require('elasticio-node').messages;
 const co = require('co');
 const rp = require('request-promise');

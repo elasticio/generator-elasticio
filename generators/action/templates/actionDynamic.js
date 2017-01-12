@@ -1,4 +1,4 @@
-/* eslint new-cap: [2, {"capIsNewExceptions": ["Q"]}] */
+/* eslint new-cap: [2, {"capIsNewExceptions": ["Q"]}] no-invalid-this: 0 no-console: 0 */
 var Q = require('q');
 var elasticio = require('elasticio-node');
 var messages = elasticio.messages;

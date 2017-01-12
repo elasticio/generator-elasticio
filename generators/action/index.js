@@ -108,6 +108,13 @@ module.exports = yeoman.Base.extend({
         this.destinationPath('lib/schemas/' + id + '.out.json')
       );
     }
+    this.log('Creating test');
+    mkdirp('specs');
+    this.fs.copy(
+      this.templatePath('action.spec.js'),
+      this.destinationPath('spec/' + id + '.spec.js')
+    );
+
     this.fs.writeJSON(this.destinationPath('component.json'), this.compDesc);
     this.log('Updated component descriptor');
   }

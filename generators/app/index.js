@@ -91,6 +91,17 @@ module.exports = yeoman.Base.extend({
         "request-promise": "^4.1.1",
         "elasticio-sailor-nodejs": "1.3.0",
         "elasticio-node": "0.0.5"
+      },
+      "scripts": {
+        "pretest": "node_modules/.bin/eslint lib spec Gruntfile.js --ext .json --ext .js --fix",
+        "test": "NODE_ENV=test grunt"
+      },
+      "devDependencies": {
+        "eslint": "^2.1.0",
+        "eslint-config-xo-space": "^0.10.0",
+        "eslint-plugin-json": "^1.2.0",
+        "grunt": "^1.0.1",
+        "grunt-jasmine-node": "^0.3.1"
       }
     });
     pkg.keywords = pkg.keywords || [];
@@ -106,6 +117,16 @@ module.exports = yeoman.Base.extend({
     this.fs.copy(
       this.templatePath('verifyCredentials.js'),
       this.destinationPath('verifyCredentials.js')
+    );
+
+    this.fs.copy(
+      this.templatePath('Gruntfile.js'),
+      this.destinationPath('Gruntfile.js')
+    );
+
+    this.fs.copy(
+      this.templatePath('.eslintrc.js'),
+      this.destinationPath('.eslintrc.js')
     );
 
     // Create and download icon
