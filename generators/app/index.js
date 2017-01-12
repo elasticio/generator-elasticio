@@ -41,6 +41,8 @@ module.exports = yeoman.Base.extend({
       this.props = props;
       console.log(props.title);
       this.props.name = _.kebabCase(props.title);
+      this.props.name = this.props.name.indexOf('-component') > 0 ?
+        this.props.name : this.props.name + '-component';
       done();
     }.bind(this));
   },
