@@ -88,11 +88,10 @@ module.exports = yeoman.Base.extend({
     extend(pkg, {
       dependencies: {
         "co": "^4.6.0",
-        "bluebird": "^3.4.6",
         "request": "^2.75.0",
         "request-promise": "^4.1.1",
-        "elasticio-sailor-nodejs": "1.3.0",
-        "elasticio-node": "0.0.5"
+        "elasticio-sailor-nodejs": "2.1.0",
+        "elasticio-node": "0.0.8"
       },
       "scripts": {
         "pretest": "node_modules/.bin/eslint lib spec Gruntfile.js --ext .json --ext .js --fix",

@@ -5,6 +5,18 @@ var messages = elasticio.messages;
 
 module.exports.process = processAction;
 module.exports.getMetaModel = getMetaModel;
+module.exports.init = init;
+
+/**
+ * This method will be called from elastic.io platform before the first message will
+ * reach the action.
+ * If you need to do a asynchronous action here please return Promise
+ *
+ * @param cfg configuration that is account information and configuration field values
+ */
+function init(cfg) {
+    return Promise.resolve();
+}
 
 /**
  * This method will be called from elastic.io platform providing following data
