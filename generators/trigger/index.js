@@ -62,7 +62,8 @@ module.exports = yeoman.generators.Base.extend({
     }
     triggers[this.props.id] = {
       title: this.props.title,
-      main: "./lib/actions/" + id + '.js'
+      main: "./lib/actions/" + id + '.js',
+      description: "Description for " + this.props.title
     };
     triggers[this.props.id].metadata = {
       in: {},

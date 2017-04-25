@@ -78,7 +78,8 @@ module.exports = yeoman.Base.extend({
     }
     actions[this.props.id] = {
       title: this.props.title,
-      main: "./lib/actions/" + id + '.js'
+      main: "./lib/actions/" + id + '.js',
+      description: "Description for " + this.props.title
     };
     if (this.props.mType === 'Static') {
       actions[this.props.id].metadata = {
