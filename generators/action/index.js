@@ -1,10 +1,10 @@
 'use strict';
-var yeoman = require('yeoman-generator');
-var chalk = require('chalk');
-var yosay = require('yosay');
-var _ = require('lodash');
-var mkdirp = require('mkdirp');
-var fs = require('fs');
+const yeoman = require('yeoman-generator');
+const chalk = require('chalk');
+const yosay = require('yosay');
+const _ = require('lodash');
+const mkdirp = require('mkdirp');
+const fs = require('fs');
 
 module.exports = yeoman.Base.extend({
   initializing: function () {
@@ -23,9 +23,9 @@ module.exports = yeoman.Base.extend({
     }
   },
   prompting: function () {
-    var done = this.async();
+    const done = this.async();
 
-    var prompts = [{
+    const prompts = [{
       type: 'input',
       name: 'title',
       message: 'Please enter an actions title',
@@ -69,8 +69,8 @@ module.exports = yeoman.Base.extend({
     }.bind(this));
   },
   writing: function () {
-    var id = this.props.id;
-    var actions = {};
+    const id = this.props.id;
+    const actions = {};
     if (this.compDesc.actions) {
       actions = this.compDesc.actions;
     } else {
