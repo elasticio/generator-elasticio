@@ -44,7 +44,8 @@
     "gulp-nsp": "^2.4.2",
     "gulp-plumber": "^1.0.0",
     "mockery": "^2.1.0",
-    "yeoman-assert": "^3.0.0"
+    "yeoman-assert": "^3.0.0",
+    "yeoman-test": "^1.7.0"
   },
   "eslintConfig": {
     "extends": "xo-space",
