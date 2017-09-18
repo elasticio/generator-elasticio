@@ -1,0 +1,9 @@
+{
+  "generator-node": {
+    "promptValues": {
+      "authorName": "elasticio",
+      "authorEmail": "info@elastic.io",
+      "authorUrl": "https://elastic.io"
+    }
+  }
+}
