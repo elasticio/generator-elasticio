@@ -18,7 +18,6 @@ module.exports = class extends Generator {
       git: true,
       license: true,
       travis: true,
-      githubAccount: 'elasticio',
       coveralls: false,
       readme: readmeTpl({
         componentName: this.props.name,
