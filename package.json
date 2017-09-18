@@ -35,6 +35,7 @@
   "devDependencies": {
     "eslint": "^4.7.0",
     "eslint-config-xo-space": "^0.16.0",
+    "eslint-plugin-json": "^1.2.0",
     "gulp": "^3.9.1",
     "gulp-eslint": "^4.0.0",
     "gulp-exclude-gitignore": "^1.2.0",
