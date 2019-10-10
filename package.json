@@ -1,30 +1,16 @@
 {
   "name": "generator-elasticio",
-  "version": "2.0.0",
   "description": "elastic.io component generator",
-  "homepage": "http://elastic.io",
+  "version": "2.0.0",
   "author": {
     "name": "elastic.io GmbH",
     "email": "info@elastic.io",
     "url": "http://www.elastic.io"
   },
-  "files": [
-    "generators"
-  ],
-  "main": "generators/index.js",
-  "keywords": [
-    "api",
-    "integration",
-    "ipaas",
-    "rest",
-    "yeoman-generator"
-  ],
-  "engine": {
-    "node": "8.5.0"
-  },
   "dependencies": {
     "chalk": "2.4.2",
     "deep-extend": "0.6.0",
+    "eslint-plugin-json": "1.4.0",
     "generator-node": "2.7.0",
     "lodash": "4.17.15",
     "mkdirp": "0.5.1",
@@ -34,18 +20,33 @@
   },
   "devDependencies": {
     "eslint": "6.5.1",
-    "eslint-config-xo-space": "0.21.0",
-    "eslint-plugin-json": "1.4.0",
+    "eslint-config-airbnb-base": "14.0.0",
+    "eslint-plugin-import": "2.18.2",
     "mockery": "2.1.0",
     "yeoman-assert": "3.1.1",
     "yeoman-test": "2.0.0"
   },
-  "eslintConfig": {
-    "extends": "xo-space",
-    "env": {
-      "mocha": true
-    }
+  "engine": {
+    "node": "8.5.0"
   },
-  "repository": "elasticio/generator-elasticio",
-  "license": "Apache-2.0"
+  "files": [
+    "generators"
+  ],
+  "homepage": "http://elastic.io",
+  "keywords": [
+    "api",
+    "integration",
+    "ipaas",
+    "rest",
+    "yeoman-generator"
+  ],
+  "license": "Apache-2.0",
+  "main": "generators/index.js",
+  "repository": {
+    "type": "git",
+    "url": "elasticio/generator-elasticio"
+  },
+  "scripts": {
+    "pretest": "eslint generators spec --fix"
+  }
 }
