@@ -12,34 +12,35 @@ module.exports = class extends Generator {
       this.compDesc = this.fs.readJSON(this.destinationPath('component.json'), {});
       // Have Yeoman greet the user.
       this.log(yosay(
-        'Welcome to the ' + chalk.red('elastic.io action') + ' generator!'
+        `Welcome to the ${chalk.red('elastic.io action')} generator!`,
       ));
       this.log('Loaded component descriptor from %s', this.destinationPath('component.json'));
     } catch (error) {
-      this.log(yosay('I can not find ' + chalk.red('component.json') + ' in the current directory, ' +
-        'please run elasticio:action in the component root folder'));
+      this.log(yosay(`I can not find ${chalk.red('component.json')} in the current directory, `
+        + 'please run elasticio:action in the component root folder'));
       throw error;
     }
   }
+
   async prompting() {
     const prompts = [{
       type: 'input',
       name: 'title',
       message: 'Please enter an actions title',
-      default: "Upsert Something",
-      validate: function (str) {
+      default: 'Upsert Something',
+      validate(str) {
         return str.length > 0;
-      }
+      },
     }, {
       type: 'input',
       name: 'id',
       message: 'Please enter an action ID',
-      default: function (answers) {
+      default(answers) {
         return _.camelCase(answers.title);
       },
-      validate: function (str) {
+      validate(str) {
         return str.length > 0;
-      }
+      },
     }, {
       type: 'list',
       name: 'mType',
@@ -48,21 +49,21 @@ module.exports = class extends Generator {
         {
           name: 'Static (known at design time)',
           short: 'Static',
-          value: 'Static'
+          value: 'Static',
         },
         {
           name: 'Dynamic (fetched at run time)',
           short: 'Dynamic',
-          value: 'Dynamic'
-        }
-      ]
+          value: 'Dynamic',
+        },
+      ],
     }];
 
     this.props = await this.prompt(prompts);
   }
 
   writing() {
-    const id = this.props.id;
+    const { id } = this.props;
     let actions = {};
     if (this.compDesc.actions) {
       actions = this.compDesc.actions;
@@ -71,13 +72,13 @@ module.exports = class extends Generator {
     }
     actions[this.props.id] = {
       title: this.props.title,
-      main: "./lib/actions/" + id + '.js',
-      description: "Description for " + this.props.title
+      main: `./lib/actions/${id}.js`,
+      description: `Description for ${this.props.title}`,
     };
     if (this.props.mType === 'Static') {
       actions[this.props.id].metadata = {
-        in: "./lib/schemas/" + id + ".in.json",
-        out: "./lib/schemas/" + id + ".out.json"
+        in: `./lib/schemas/${id}.in.json`,
+        out: `./lib/schemas/${id}.out.json`,
       };
     } else {
       actions[this.props.id].dynamicMetadata = true;
@@ -86,8 +87,8 @@ module.exports = class extends Generator {
     this.log('Creating action code file');
     mkdirp('lib/actions');
     this.fs.copy(
-      this.templatePath('action' + this.props.mType + '.js'),
-      this.destinationPath('lib/actions/' + id + '.js')
+      this.templatePath(`action${this.props.mType}.js`),
+      this.destinationPath(`lib/actions/${id}.js`),
     );
 
     if (this.props.mType === 'Static') {
@@ -95,18 +96,18 @@ module.exports = class extends Generator {
       mkdirp('lib/schemas');
       this.fs.copy(
         this.templatePath('action.in.json'),
-        this.destinationPath('lib/schemas/' + id + '.in.json')
+        this.destinationPath(`lib/schemas/${id}.in.json`),
       );
       this.fs.copy(
         this.templatePath('action.out.json'),
-        this.destinationPath('lib/schemas/' + id + '.out.json')
+        this.destinationPath(`lib/schemas/${id}.out.json`),
       );
     }
     this.log('Creating test');
     mkdirp('specs');
     this.fs.copy(
       this.templatePath('action.spec.js'),
-      this.destinationPath('spec/' + id + '.spec.js')
+      this.destinationPath(`spec/${id}.spec.js`),
     );
 
     this.fs.writeJSON(this.destinationPath('component.json'), this.compDesc);

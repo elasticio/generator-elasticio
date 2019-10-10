@@ -12,12 +12,12 @@ describe('Test action', () => {
       }
     }
     const msg = {
-      body: {}
+      body: {},
     };
     const cfg = {};
     const snapshot = {};
     action.call({
-      emit: onEmit
+      emit: onEmit,
     }, msg, cfg, snapshot);
   });
 });

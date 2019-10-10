@@ -1,7 +1,8 @@
 /* eslint new-cap: [2, {"capIsNewExceptions": ["Q"]}] no-invalid-this: 0 no-console: 0 */
-var Q = require('q');
-var elasticio = require('elasticio-node');
-var messages = elasticio.messages;
+const Q = require('q');
+const elasticio = require('elasticio-node');
+
+const { messages } = elasticio;
 
 module.exports.process = processAction;
 module.exports.getMetaModel = getMetaModel;
@@ -15,7 +16,7 @@ module.exports.init = init;
  * @param cfg configuration that is account information and configuration field values
  */
 function init(cfg) {
-    return Promise.resolve();
+  return Promise.resolve();
 }
 
 /**
@@ -25,18 +26,18 @@ function init(cfg) {
  * @param cfg configuration that is account information and configuration field values
  */
 function processAction(msg, cfg) {
-  var self = this;
-  var name = cfg.name;
+  const self = this;
+  const { name } = cfg;
 
   function emitData() {
-    console.log('About to say hello to ' + name + ' again');
+    console.log(`About to say hello to ${name} again`);
 
-    var body = {
-      greeting: name + ' How are you today?',
-      originalGreeting: msg.body.greeting
+    const body = {
+      greeting: `${name} How are you today?`,
+      originalGreeting: msg.body.greeting,
     };
 
-    var data = messages.newMessageWithBody(body);
+    const data = messages.newMessageWithBody(body);
 
     self.emit('data', data);
   }
@@ -69,24 +70,24 @@ function getMetaModel(cfg, cb) {
   // it is configured in component.json
   cb(null, {
     in: {
-      type: "object",
+      type: 'object',
       properties: {
         inValue: {
-          type: "string",
+          type: 'string',
           required: true,
-          title: "Input Value"
-        }
-      }
+          title: 'Input Value',
+        },
+      },
     },
     out: {
-      type: "object",
+      type: 'object',
       properties: {
         outValue: {
-          type: "string",
+          type: 'string',
           required: true,
-          title: "Output Value"
-        }
-      }
-    }
+          title: 'Output Value',
+        },
+      },
+    },
   });
 }

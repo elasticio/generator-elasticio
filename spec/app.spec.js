@@ -1,30 +1,30 @@
-'use strict';
-var path = require('path');
-var assert = require('yeoman-assert');
-var helpers = require('yeoman-test');
-var mockery = require('mockery');
 
-describe('generator-elasticio:app', function () {
-  before(function (done) {
+const path = require('path');
+const assert = require('yeoman-assert');
+const helpers = require('yeoman-test');
+const mockery = require('mockery');
+
+describe('generator-elasticio:app', () => {
+  before((done) => {
     mockery.enable({
       warnOnReplace: false,
-      warnOnUnregistered: false
+      warnOnUnregistered: false,
     });
 
-    mockery.registerMock('npm-name', function (name, cb) {
+    mockery.registerMock('npm-name', (name, cb) => {
       cb(null, true);
     });
 
-    mockery.registerMock('github-username', function (name, cb) {
+    mockery.registerMock('github-username', (name, cb) => {
       cb(null, 'unicornUser');
     });
 
     mockery.registerMock(
       require.resolve('generator-license/app'),
-      helpers.createDummyGenerator()
+      helpers.createDummyGenerator(),
     );
 
-    var answers = {
+    const answers = {
       title: 'Test Component',
       description: 'Test Description',
       name: 'generator-node',
@@ -33,26 +33,26 @@ describe('generator-elasticio:app', function () {
       authorName: 'The Yeoman Team',
       authorEmail: 'hi@yeoman.io',
       authorUrl: 'http://yeoman.io',
-      keywords: ['foo', 'bar']
+      keywords: ['foo', 'bar'],
     };
 
     helpers.run(path.join(__dirname, '../generators/app'))
       .withPrompts(answers).on('end', done);
   });
 
-  after(function () {
+  after(() => {
     mockery.disable();
   });
 
-  it('creates files', function () {
+  it('creates files', () => {
     assert.file([
       'package.json',
       'component.json',
-      'README.md'
+      'README.md',
     ]);
     assert.noFile([
       'lib/index.js',
-      'test/index.js'
+      'test/index.js',
     ]);
   });
 });
