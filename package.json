@@ -48,6 +48,6 @@
     "url": "elasticio/generator-elasticio"
   },
   "scripts": {
-    "pretest": "eslint generators spec --fix"
+    "test": "mocha spec/"
   }
 }
