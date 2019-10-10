@@ -23,7 +23,7 @@ module.exports = class extends Generator {
       type: 'input',
       name: 'title',
       message: 'Please enter a component descriptive name (title)',
-      default: "My API",
+      default: 'My API',
       validate: function (str) {
         return str.length > 0;
       }
@@ -31,7 +31,7 @@ module.exports = class extends Generator {
       type: 'input',
       name: 'description',
       message: 'Please enter a component description',
-      default: "My component that speaks to my API"
+      default: 'My component that speaks to my API'
     }];
 
     this.props = await this.prompt(prompts);
@@ -80,22 +80,30 @@ module.exports = class extends Generator {
     var pkg = this.fs.readJSON(this.destinationPath('package.json'), {});
     extend(pkg, {
       dependencies: {
-        "co": "^4.6.0",
-        "request": "^2.75.0",
-        "request-promise": "^4.1.1",
-        "elasticio-sailor-nodejs": "2.1.0",
-        "elasticio-node": "0.0.8"
+        '@elastic.io/component-commons-library': '0.0.6',
+        'elasticio-node': '0.0.9',
+        'elasticio-rest-node': '1.2.3',
+        'elasticio-sailor-nodejs': '2.5.1'
       },
-      "scripts": {
-        "pretest": "node_modules/.bin/eslint lib spec Gruntfile.js --ext .json --ext .js --fix",
-        "test": "NODE_ENV=test grunt"
+      scripts: {
+        pretest: 'eslint spec lib --fix',
+        test: 'mocha spec --recursive',
+        'integration-test': 'mocha spec-integration'
       },
-      "devDependencies": {
-        "eslint": "^2.1.0",
-        "eslint-config-xo-space": "^0.10.0",
-        "eslint-plugin-json": "^1.2.0",
-        "grunt": "^1.0.1",
-        "grunt-jasmine-node": "^0.3.1"
+      _devDependencies: {
+        chai: '4.2.0',
+        dotenv: '8.1.0',
+        eslint: '6.4.0',
+        'eslint-config-airbnb-base': '14.0.0',
+        'eslint-plugin-import': '2.18.2',
+        mocha: '6.0.2',
+        sinon: '7.4.2'
+      },
+      get devDependencies() {
+        return this._devDependencies;
+      },
+      set devDependencies(value) {
+        this._devDependencies = value;
       }
     });
     pkg.keywords = pkg.keywords || [];
@@ -120,7 +128,7 @@ module.exports = class extends Generator {
 
     // Create and download icon
     var color = ((1 << 24) * Math.random() | 0).toString(16);
-    var iconURL = "http://dummyimage.com/64x64/" + color + "/fff.png&text=" + this.props.title.split(' ')[0];
+    var iconURL = 'http://dummyimage.com/64x64/' + color + '/fff.png&text=' + this.props.title.split(' ')[0];
     var file = fs.createWriteStream(this.destinationPath('logo.png'));
     http.get(iconURL, function (response) {
       response.pipe(file);
@@ -128,6 +136,6 @@ module.exports = class extends Generator {
   }
 
   install() {
-    this.installDependencies();
+    this.npmInstall();
   }
 };
