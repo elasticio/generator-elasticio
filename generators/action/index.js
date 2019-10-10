@@ -84,13 +84,6 @@ module.exports = class extends Generator {
       actions[this.props.id].dynamicMetadata = true;
     }
 
-    this.log('Creating action code file');
-    mkdirp('lib/actions');
-    this.fs.copy(
-      this.templatePath(`action${this.props.mType}.js`),
-      this.destinationPath(`lib/actions/${id}.js`),
-    );
-
     if (this.props.mType === 'Static') {
       this.log('Creating schema files');
       mkdirp('lib/schemas');
@@ -103,8 +96,16 @@ module.exports = class extends Generator {
         this.destinationPath(`lib/schemas/${id}.out.json`),
       );
     }
+
+    this.log('Creating action file');
+    mkdirp('lib/actions');
+    this.fs.copy(
+      this.templatePath('action.js'),
+      this.destinationPath(`lib/actions/${id}.js`),
+    );
+
     this.log('Creating test');
-    mkdirp('specs');
+    mkdirp('spec');
     this.fs.copy(
       this.templatePath('action.spec.js'),
       this.destinationPath(`spec/${id}.spec.js`),
