@@ -1,58 +1,54 @@
-
 const path = require('path');
 const assert = require('yeoman-assert');
+const rimraf = require('rimraf');
 const helpers = require('yeoman-test');
-const mockery = require('mockery');
 
 describe('generator-elasticio:app', () => {
-  before((done) => {
-    mockery.enable({
-      warnOnReplace: false,
-      warnOnUnregistered: false,
-    });
+  const title = 'tiny';
+  const description = 'my tiny component';
+  const dirPath = path.join(__dirname, 'tmp');
 
-    mockery.registerMock('npm-name', (name, cb) => {
-      cb(null, true);
-    });
-
-    mockery.registerMock('github-username', (name, cb) => {
-      cb(null, 'unicornUser');
-    });
-
-    mockery.registerMock(
-      require.resolve('generator-license/app'),
-      helpers.createDummyGenerator(),
-    );
-
-    const answers = {
-      title: 'Test Component',
-      description: 'Test Description',
-      name: 'generator-node',
-      homepage: 'http://yeoman.io',
-      githubAccount: 'yeoman',
-      authorName: 'The Yeoman Team',
-      authorEmail: 'hi@yeoman.io',
-      authorUrl: 'http://yeoman.io',
-      keywords: ['foo', 'bar'],
-    };
-
-    helpers.run(path.join(__dirname, '../generators/app'))
-      .withPrompts(answers).on('end', done);
+  beforeEach(async () => {
+    await helpers.run(path.join(__dirname, '../generators/app'))
+      .inDir(dirPath)
+      .withPrompts({
+        title,
+        description,
+      });
   });
 
-  after(() => {
-    mockery.disable();
-  });
-
-  it('creates files', () => {
-    assert.file([
-      'package.json',
+  it('Creates the correct files', () => {
+    const files = [
+      '.eslintrc.js',
+      '.gitignore',
       'component.json',
+      'logo.png',
+      'package.json',
       'README.md',
-    ]);
-    assert.noFile([
-      'lib/index.js',
-      'test/index.js',
-    ]);
+      'verifyCredentials.js',
+    ];
+    files.forEach((file) => assert.file(path.join(dirPath, `${title}-component/${file}`)));
+    assert.noFile(path.join(dirPath, `${title}-component/.eslintignore.js`));
+    assert.noFile(path.join(dirPath, `${title}-component/.gitattributes.js`));
+  });
+
+  it('Populates the component.json file correctly', () => {
+    assert.JSONFileContent(path.join(dirPath, `${title}-component/component.json`), {
+      title,
+      description,
+      credentials: {
+        fields: {
+          name: {
+            label: 'My API Key',
+            required: true,
+            viewClass: 'TextFieldView',
+          },
+        },
+      },
+    });
+  });
+
+  afterEach(() => {
+    rimraf.sync(path.join(__dirname, 'tmp'));
   });
 });
