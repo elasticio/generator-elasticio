@@ -53,23 +53,21 @@ module.exports = class extends Generator {
     const readmeTpl = _.template(this.fs.read(this.templatePath('README.md')));
 
     this.composeWith(require.resolve('generator-node/generators/app'), {
-      options: {
-        travis: false,
-        editorConfig: false,
-        boilerplate: false,
-        name: this.props.name,
-        keywords: false,
-        description: this.props.description,
-        license: false,
-        coveralls: false,
-        cli: false,
-        githubAccount: false,
-        readme: readmeTpl({
-          componentName: this.props.name,
-          componentTitle: this.props.title,
-          componentDescription: this.props.description,
-        }),
-      },
+      travis: false,
+      editorconfig: false,
+      boilerplate: false,
+      name: this.props.name,
+      keywords: false,
+      description: this.props.description,
+      license: false,
+      coveralls: false,
+      cli: false,
+      githubAccount: false,
+      readme: readmeTpl({
+        componentName: this.props.name,
+        componentTitle: this.props.title,
+        componentDescription: this.props.description,
+      }),
     }, {
       local: require('generator-node').app,
     });
@@ -124,6 +122,9 @@ module.exports = class extends Generator {
       this.templatePath('.eslintrc.js'),
       this.destinationPath('.eslintrc.js'),
     );
+
+    this.fs.delete('.gitattributes');
+    this.fs.delete('.eslintignore');
 
     // Create and download icon
     const color = ((1 << 24) * Math.random() | 0).toString(16);
