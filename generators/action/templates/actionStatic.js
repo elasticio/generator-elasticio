@@ -1,5 +1,6 @@
-/*eslint no-invalid-this: 0 no-console: 0*/
-"use strict";
+/* eslint no-invalid-this: 0 no-console: 0 */
+
+
 const eioUtils = require('elasticio-node').messages;
 const co = require('co');
 const rp = require('request-promise');
@@ -29,13 +30,13 @@ function init(cfg) {
 function processAction(msg, cfg, snapshot) {
   console.log('Action started, snapshot=%j', snapshot);
 
-  co(function*() {
+  co(function* () {
     console.log('Creating new request bin');
 
     const bin = yield rp({
       method: 'POST',
       uri: 'http://requestb.in/api/v1/bins',
-      json: true
+      json: true,
     });
 
     console.log('New request bin created bin=%j', bin);
@@ -45,7 +46,7 @@ function processAction(msg, cfg, snapshot) {
     console.log('Processing completed');
 
     this.emit('end');
-  }.bind(this)).catch(err => {
+  }.bind(this)).catch((err) => {
     console.log('Error occurred', err.stack || err);
     this.emit('error', err);
     this.emit('end');
