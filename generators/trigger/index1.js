@@ -1,12 +1,13 @@
-var Generator = require('yeoman-generator');
+'use strict';
+var yeoman = require('yeoman-generator');
 var chalk = require('chalk');
 var yosay = require('yosay');
 var _ = require('lodash');
 var mkdirp = require('mkdirp');
 var fs = require('fs');
 
-module.exports = class extends Generator {
-  initializing () {
+module.exports = yeoman.generators.Base.extend({
+  initializing: function () {
     try {
       fs.accessSync(this.destinationPath('component.json'));
       this.compDesc = this.fs.readJSON(this.destinationPath('component.json'), {});
@@ -20,9 +21,9 @@ module.exports = class extends Generator {
         'please run elasticio:action in the component root folder'));
       throw error;
     }
-  }
+  },
 
-  prompting () {
+  prompting: function () {
     var done = this.async();
 
     var prompts = [{
@@ -49,9 +50,9 @@ module.exports = class extends Generator {
       this.props = props;
       done();
     }.bind(this));
-  }
+  },
 
-  writing () {
+  writing: function () {
     var id = this.props.id;
     var triggers = {};
     if (this.compDesc.triggers) {
@@ -85,4 +86,4 @@ module.exports = class extends Generator {
     this.fs.writeJSON(this.destinationPath('component.json'), this.compDesc);
     this.log('Updated component descriptor');
   }
-};
+});
