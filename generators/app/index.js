@@ -1,5 +1,4 @@
-'use strict';
-var yeoman = require('yeoman-generator');
+var Generator = require('yeoman-generator');
 var chalk = require('chalk');
 var yosay = require('yosay');
 var path = require('path');
@@ -9,12 +8,12 @@ var extend = require('deep-extend');
 var fs = require('fs');
 var http = require('http');
 
-module.exports = yeoman.Base.extend({
-  initializing: function () {
+module.exports = class extends Generator {
+  initializing() {
     this.props = {};
-  },
+  }
 
-  prompting: function () {
+  prompting() {
     var done = this.async();
 
     // Have Yeoman greet the user.
@@ -45,9 +44,9 @@ module.exports = yeoman.Base.extend({
         this.props.name : this.props.name + '-component';
       done();
     }.bind(this));
-  },
+  }
 
-  default: function () {
+  default() {
     if (path.basename(this.destinationPath()) !== this.props.name) {
       this.log(
         'Your component must be inside a folder named ' + this.props.name + '\n' +
@@ -81,9 +80,9 @@ module.exports = yeoman.Base.extend({
     }, {
       local: require('generator-node').app
     });
-  },
+  }
 
-  writing: function () {
+  writing() {
     var pkg = this.fs.readJSON(this.destinationPath('package.json'), {});
     extend(pkg, {
       dependencies: {
@@ -137,9 +136,9 @@ module.exports = yeoman.Base.extend({
     http.get(iconURL, function (response) {
       response.pipe(file);
     });
-  },
+  }
 
-  install: function () {
+  install() {
     this.installDependencies();
   }
-});
+};

@@ -1,19 +1,18 @@
-'use strict';
-const yeoman = require('yeoman-generator');
+const Generator = require('yeoman-generator');
 const chalk = require('chalk');
 const yosay = require('yosay');
 const _ = require('lodash');
 const mkdirp = require('mkdirp');
 const fs = require('fs');
 
-module.exports = yeoman.Base.extend({
-  initializing: function () {
+module.exports = class extends Generator {
+  initializing() {
     try {
       fs.accessSync(this.destinationPath('component.json'));
       this.compDesc = this.fs.readJSON(this.destinationPath('component.json'), {});
       // Have Yeoman greet the user.
       this.log(yosay(
-        'Welcome to the ' + chalk.red('elastic.io action ') + ' generator!'
+        'Welcome to the ' + chalk.red('elastic.io action') + ' generator!'
       ));
       this.log('Loaded component descriptor from %s', this.destinationPath('component.json'));
     } catch (error) {
@@ -21,8 +20,8 @@ module.exports = yeoman.Base.extend({
         'please run elasticio:action in the component root folder'));
       throw error;
     }
-  },
-  prompting: function () {
+  }
+  prompting() {
     const done = this.async();
 
     const prompts = [{
@@ -67,10 +66,10 @@ module.exports = yeoman.Base.extend({
 
       done();
     }.bind(this));
-  },
-  writing: function () {
+  }
+  writing() {
     const id = this.props.id;
-    const actions = {};
+    let actions = {};
     if (this.compDesc.actions) {
       actions = this.compDesc.actions;
     } else {
@@ -119,5 +118,4 @@ module.exports = yeoman.Base.extend({
     this.fs.writeJSON(this.destinationPath('component.json'), this.compDesc);
     this.log('Updated component descriptor');
   }
-
-});
+};
