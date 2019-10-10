@@ -4,16 +4,16 @@ const assert = require('yeoman-assert');
 const helpers = require('yeoman-test');
 const fs = require('fs');
 
+let answers = {
+  title: 'My New Action',
+  id: 'myTestID',
+  mType: 'Static',
+};
+
 describe('generator-elasticio:action', () => {
   it('can generate action with static metadata', () => {
-    before((done) => {
-      const answers = {
-        title: 'My New Action',
-        id: 'myTestID',
-        mType: 'Static',
-      };
-
-      helpers.run(path.join(__dirname, '../generators/action'))
+    before(async () => {
+      await helpers.run(path.join(__dirname, '../generators/action'))
         .inTmpDir((dir) => {
           // `dir` is the path to the new temporary directory
           fs.writeFileSync(`${dir}/component.json`, '{}', 'utf8');
@@ -23,7 +23,6 @@ describe('generator-elasticio:action', () => {
           // Disable warning on overwrite
           generator.conflicter.force = true;
         })
-        .on('end', done);
     });
 
     it('creates files', () => {
@@ -45,14 +44,9 @@ describe('generator-elasticio:action', () => {
   });
 
   it('can generate action with dynamic metadata', () => {
-    before((done) => {
-      const answers = {
-        title: 'My New Action',
-        id: 'myTestID',
-        mType: 'Dynamic',
-      };
-
-      helpers.run(path.join(__dirname, '../generators/action'))
+    before(async () => {
+      answers.mType = 'Dynamic';
+      await helpers.run(path.join(__dirname, '../generators/action'))
         .inTmpDir((dir) => {
           // `dir` is the path to the new temporary directory
           fs.writeFileSync(`${dir}/component.json`, '{}', 'utf8');
@@ -62,7 +56,6 @@ describe('generator-elasticio:action', () => {
           // Disable warning on overwrite
           generator.conflicter.force = true;
         })
-        .on('end', done);
     });
 
     it('creates files', () => {
