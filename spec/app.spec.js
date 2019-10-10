@@ -1,6 +1,5 @@
 const path = require('path');
 const assert = require('yeoman-assert');
-const rimraf = require('rimraf');
 const helpers = require('yeoman-test');
 
 describe('generator-elasticio:app', () => {
