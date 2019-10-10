@@ -21,9 +21,7 @@ module.exports = class extends Generator {
       throw error;
     }
   }
-  prompting() {
-    const done = this.async();
-
+  async prompting() {
     const prompts = [{
       type: 'input',
       name: 'title',
@@ -60,13 +58,9 @@ module.exports = class extends Generator {
       ]
     }];
 
-    this.prompt(prompts, function (props) {
-      this.props = props;
-      // To access props later use this.props.someOption;
-
-      done();
-    }.bind(this));
+    this.props = await this.prompt(prompts);
   }
+
   writing() {
     const id = this.props.id;
     let actions = {};

@@ -13,9 +13,7 @@ module.exports = class extends Generator {
     this.props = {};
   }
 
-  prompting() {
-    var done = this.async();
-
+  async prompting() {
     // Have Yeoman greet the user.
     this.log(yosay(
       'Welcome to the ' + chalk.red('elastic.io component') + ' generator!'
@@ -36,14 +34,10 @@ module.exports = class extends Generator {
       default: "My component that speaks to my API"
     }];
 
-    this.prompt(prompts, function (props) {
-      this.props = props;
-      console.log(props.title);
-      this.props.name = _.kebabCase(props.title);
-      this.props.name = this.props.name.indexOf('-component') > 0 ?
-        this.props.name : this.props.name + '-component';
-      done();
-    }.bind(this));
+    this.props = await this.prompt(prompts);
+    this.props.name = _.kebabCase(this.props.title);
+    this.props.name = this.props.name.indexOf('-component') > 0 ?
+      this.props.name : this.props.name + '-component';
   }
 
   default() {
@@ -58,7 +52,7 @@ module.exports = class extends Generator {
 
     var readmeTpl = _.template(this.fs.read(this.templatePath('README.md')));
 
-    this.composeWith('node:app', {
+    this.composeWith(require.resolve('generator-node/generators/app'), {
       options: {
         babel: false,
         boilerplate: false,

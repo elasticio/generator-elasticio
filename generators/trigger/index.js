@@ -6,7 +6,7 @@ var mkdirp = require('mkdirp');
 var fs = require('fs');
 
 module.exports = class extends Generator {
-  initializing () {
+  initializing() {
     try {
       fs.accessSync(this.destinationPath('component.json'));
       this.compDesc = this.fs.readJSON(this.destinationPath('component.json'), {});
@@ -22,9 +22,7 @@ module.exports = class extends Generator {
     }
   }
 
-  prompting () {
-    var done = this.async();
-
+  async prompting() {
     var prompts = [{
       type: 'input',
       name: 'title',
@@ -45,13 +43,10 @@ module.exports = class extends Generator {
       }
     }];
 
-    this.prompt(prompts, function (props) {
-      this.props = props;
-      done();
-    }.bind(this));
+    this.props = await this.prompt(prompts);
   }
 
-  writing () {
+  writing() {
     var id = this.props.id;
     var triggers = {};
     if (this.compDesc.triggers) {
