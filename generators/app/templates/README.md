@@ -1,6 +1,6 @@
 [![CircleCI](https://circleci.com/gh/elasticio/component)](https://circleci.com/gh/elasticio/component)
 
-# <%- componentTitle %>
+# <%- componentName %>
 ## Table of Contents
 
 * [General information](#general-information)
