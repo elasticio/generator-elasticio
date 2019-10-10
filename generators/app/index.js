@@ -54,16 +54,15 @@ module.exports = class extends Generator {
 
     this.composeWith(require.resolve('generator-node/generators/app'), {
       options: {
-        babel: false,
+        travis: false,
+        editorConfig: false,
         boilerplate: false,
         name: this.props.name,
         keywords: false,
         description: this.props.description,
-        lint: false,
-        gulp: false,
+        license: false,
         coveralls: false,
         cli: false,
-        skipInstall: this.options.skipInstall,
         githubAccount: false,
         readme: readmeTpl({
           componentName: this.props.name,

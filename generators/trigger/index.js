@@ -56,7 +56,7 @@ module.exports = class extends Generator {
     }
     triggers[this.props.id] = {
       title: this.props.title,
-      main: `./lib/actions/${id}.js`,
+      main: `./lib/triggers/${id}.js`,
       description: `Description for ${this.props.title}`,
     };
     triggers[this.props.id].metadata = {
