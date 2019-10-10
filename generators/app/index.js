@@ -114,11 +114,6 @@ module.exports = class extends Generator {
     );
 
     this.fs.copy(
-      this.templatePath('Gruntfile.js'),
-      this.destinationPath('Gruntfile.js')
-    );
-
-    this.fs.copy(
       this.templatePath('.eslintrc.js'),
       this.destinationPath('.eslintrc.js')
     );
