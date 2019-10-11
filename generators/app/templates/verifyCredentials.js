@@ -1,11 +1,14 @@
-'use strict';
+/*eslint-disable */
+const Client = require('');
 
-/**
-* This function will be called by the platform to verify given credentials
-*
-* @returns Promise
-**/
-module.exports = function (credentials) {
-  console.log('Credentials passed for verification %j', credentials);
-  return Promise.resolve(true);
+module.exports = async function verify(credentials, callback) {
+  try {
+    const client = new Client(credentials);
+    const requestOptions = {};
+    await client.makeRequest(requestOptions);
+    
+    callback(null, { verified: true });
+  } catch (e) {
+    callback(null, { verified: false });
+  }
 };
