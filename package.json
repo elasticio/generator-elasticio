@@ -47,6 +47,7 @@
     "url": "elasticio/generator-elasticio"
   },
   "scripts": {
-    "test": "mocha spec/"
+    "pretest": "eslint spec generators --fix",
+    "test": "mocha spec --recursive --timeout 50000"
   }
 }
