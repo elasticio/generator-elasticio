@@ -78,6 +78,7 @@ module.exports = class extends Generator {
         componentDescription: this.props.description,
       }),
     }, {
+      // eslint-disable-next-line global-require
       local: require('generator-node').app,
     });
   }
@@ -133,7 +134,6 @@ module.exports = class extends Generator {
     );
 
     this.fs.delete('.gitattributes');
-    this.fs.delete('.eslintignore');
 
     // Create and download icon
     if (!this.props.addLogo) {

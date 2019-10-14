@@ -19,7 +19,7 @@ describe('generator-elasticio:action', () => {
         })
         .withPrompts(answers)
         .on('ready', (generator) => {
-          // Disable warning on overwrite
+          // eslint-disable-next-line no-param-reassign
           generator.conflicter.force = true;
         });
     });
@@ -52,7 +52,7 @@ describe('generator-elasticio:action', () => {
         })
         .withPrompts(answers)
         .on('ready', (generator) => {
-          // Disable warning on overwrite
+          // eslint-disable-next-line no-param-reassign
           generator.conflicter.force = true;
         });
     });
