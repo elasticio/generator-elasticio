@@ -1,4 +1,3 @@
-/*eslint-disable */
 const Client = require('');
 
 module.exports = async function verify(credentials, callback) {

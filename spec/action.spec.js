@@ -21,7 +21,7 @@ describe('generator-elasticio:action', () => {
         .on('ready', (generator) => {
           // Disable warning on overwrite
           generator.conflicter.force = true;
-        })
+        });
     });
 
     it('creates files', () => {
@@ -54,7 +54,7 @@ describe('generator-elasticio:action', () => {
         .on('ready', (generator) => {
           // Disable warning on overwrite
           generator.conflicter.force = true;
-        })
+        });
     });
 
     it('creates files', () => {

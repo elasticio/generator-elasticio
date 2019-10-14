@@ -1,4 +1,5 @@
-coverage
-**/templates
-.DS_Store
-.idea
+# Template files
+
+generators/app/templates
+generators/action/templates
+generators/trigger/templates
