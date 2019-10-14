@@ -1,12 +1,11 @@
+/* eslint-disable no-underscore-dangle */
 const Generator = require('yeoman-generator');
-const chalk = require('chalk');
-const yosay = require('yosay');
+const axios = require('axios');
 const path = require('path');
 const _ = require('lodash');
 const mkdirp = require('mkdirp');
 const extend = require('deep-extend');
 const fs = require('fs');
-const http = require('http');
 
 module.exports = class extends Generator {
   initializing() {
@@ -14,30 +13,40 @@ module.exports = class extends Generator {
   }
 
   async prompting() {
-    // Have Yeoman greet the user.
-    this.log(yosay(
-      `Welcome to the ${chalk.red('elastic.io component')} generator!`,
-    ));
+    this.log('Welcome to the component generator');
 
     const prompts = [{
       type: 'input',
       name: 'title',
-      message: 'Please enter a component descriptive name (title)',
-      default: 'My API',
+      message: 'Please enter a title for your component:',
       validate(str) {
         return str.length > 0;
       },
     }, {
       type: 'input',
       name: 'description',
-      message: 'Please enter a component description',
-      default: 'My component that speaks to my API',
+      message: 'Please enter a description for your component:',
+    }, {
+      type: 'confirm',
+      name: 'addLogo',
+      message: 'Would you like to add a logo to your project now?',
+    }];
+
+    const nextPrompts = [{
+      type: 'input',
+      name: 'logo',
+      message: 'Please provide the URL where your logo can be located.\nNote that logos should be 64x64 pixels',
     }];
 
     this.props = await this.prompt(prompts);
     this.props.name = _.kebabCase(this.props.title);
     this.props.name = this.props.name.indexOf('-component') > 0
       ? this.props.name : `${this.props.name}-component`;
+
+    if (this.props.addLogo) {
+      const logoProps = await this.prompt(nextPrompts);
+      this.props = { ...this.props, ...logoProps };
+    }
   }
 
   default() {
@@ -73,7 +82,7 @@ module.exports = class extends Generator {
     });
   }
 
-  writing() {
+  async writing() {
     const pkg = this.fs.readJSON(this.destinationPath('package.json'), {});
     extend(pkg, {
       dependencies: {
@@ -127,12 +136,17 @@ module.exports = class extends Generator {
     this.fs.delete('.eslintignore');
 
     // Create and download icon
-    const color = ((1 << 24) * Math.random() | 0).toString(16);
-    const iconURL = `http://dummyimage.com/64x64/${color}/fff.png&text=${this.props.title.split(' ')[0]}`;
-    const file = fs.createWriteStream(this.destinationPath('logo.png'));
-    http.get(iconURL, (response) => {
-      response.pipe(file);
-    });
+    if (!this.props.addLogo) {
+      fs.createWriteStream(this.destinationPath('logo.png'));
+    } else {
+      const url = this.props.logo;
+      const file = fs.createWriteStream(this.destinationPath('logo.png'));
+      const response = await axios({
+        url,
+        responseType: 'stream',
+      });
+      response.data.pipe(file);
+    }
   }
 
   install() {
