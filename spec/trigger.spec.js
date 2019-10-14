@@ -18,7 +18,7 @@ describe('generator-elasticio:trigger', () => {
         })
         .withPrompts(answers)
         .on('ready', (generator) => {
-          // Disable warning on overwrite
+          // eslint-disable-next-line no-param-reassign
           generator.conflicter.force = true;
         })
         .on('end', done);
