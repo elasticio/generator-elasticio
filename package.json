@@ -15,7 +15,6 @@
     "generator-node": "2.7.0",
     "lodash": "4.17.15",
     "mkdirp": "0.5.1",
-    "rimraf": "^3.0.0",
     "yeoman-generator": "4.1.0",
     "yosay": "2.0.2"
   },
