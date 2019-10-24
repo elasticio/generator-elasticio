@@ -9,5 +9,4 @@ exports.process = async function process(msg, cfg) {
   }
   this.emit('data', messages.newMessageWithBody({id: id}));
 };
-
 <%-metadata%>

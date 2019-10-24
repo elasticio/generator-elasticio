@@ -121,7 +121,7 @@ module.exports = class extends Generator {
       this.destinationPath(`lib/actions/${id}.js`),
       (() => {
         if (mType === 'Static') return { metadata: '' };
-        return { metadata: 'exports.getMetaModel = async function getMetaModel(cfg) {};' };
+        return { metadata: 'exports.getMetaModel = async function getMetaModel(cfg) {};\n' };
       })(),
     );
 

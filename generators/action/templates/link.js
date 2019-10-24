@@ -15,5 +15,4 @@ exports.process = async function process(msg, cfg) {
 
   createLink(object1Id, object2Id, linkMetadata);
 };
-
 <%-metadata%>
