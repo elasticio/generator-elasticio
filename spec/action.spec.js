@@ -1,80 +1,83 @@
+/* eslint-disable no-unused-vars */
 const path = require('path');
+const fs = require('fs');
+const axios = require('axios');
 const assert = require('yeoman-assert');
 const helpers = require('yeoman-test');
-const fs = require('fs');
+const { expect } = require('chai');
 
-const answers = {
-  title: 'My New Action',
-  id: 'myTestID',
-  mType: 'Static',
-};
+const files = [
+  '.eslintrc.js',
+  '.gitignore',
+  '.eslintignore',
+  'component.json',
+  'logo.png',
+  'package.json',
+  'README.md',
+  'verifyCredentials.js',
+];
 
-describe('generator-elasticio:action', () => {
-  it('can generate action with static metadata', () => {
-    before(async () => {
-      await helpers.run(path.join(__dirname, '../generators/action'))
-        .inTmpDir((dir) => {
-          // `dir` is the path to the new temporary directory
-          fs.writeFileSync(`${dir}/component.json`, '{}', 'utf8');
-        })
-        .withPrompts(answers)
-        .on('ready', (generator) => {
-          // eslint-disable-next-line no-param-reassign
-          generator.conflicter.force = true;
-        });
+
+const title = 'tiny';
+const description = 'my tiny component';
+const dirPath = path.join(__dirname, 'tmp');
+
+
+
+(async () => {
+  await helpers.run(path.join(__dirname, '../generators/app'))
+    .inDir(dirPath)
+    .withPrompts({
+      title,
+      description,
+      addLogo: true,
+      logo: 'https://app.elastic.io/img/logo.svg',
     });
+  fs.chmod(path.join(dirPath, `${title}-component/component.json`), 0o777);
+})();
 
-    it('creates files', () => {
-      assert.file([
-        'component.json',
-        'lib/actions/myTestID.js',
-        'lib/schemas/myTestID.in.json',
-        'lib/schemas/myTestID.out.json',
-      ]);
-      assert.jsonFileContent('component.json', {
-        actions: {
-          myTestID: {
-            title: 'My New Action',
-            main: './lib/actions/myTestID.js',
-          },
-        },
+describe('generator-elasticio:actions', () => {
+  it('Creates the correct files for static actions', async () => {
+    const actionPath = path.join(dirPath, `${title}-component`);
+    await helpers.run(path.join(__dirname, '../generators/action'))
+      .inDir(actionPath)
+      .withPrompts({
+        id: 'test',
+        title: 'Test',
+        actionType: 'upsert',
+        mType: 'Static',
       });
-    });
+    assert.file(path.join(dirPath, `${title}-component/lib/actions/test.js`));
+    assert.file(path.join(dirPath, `${title}-component/lib/schemas/test.in.json`));
+    assert.file(path.join(dirPath, `${title}-component/lib/schemas/test.out.json`));
+    assert.file(path.join(dirPath, `${title}-component/spec/test.spec.js`));
+    assert.file(path.join(dirPath, `${title}-component/spec-integration/test.spec.js`));
+
+    fs.unlinkSync(path.join(dirPath, `${title}-component/lib/actions/test.js`));
+    fs.unlinkSync(path.join(dirPath, `${title}-component/lib/schemas/test.in.json`));
+    fs.unlinkSync(path.join(dirPath, `${title}-component/lib/schemas/test.out.json`));
+    fs.unlinkSync(path.join(dirPath, `${title}-component/spec/test.spec.js`));
+    fs.unlinkSync(path.join(dirPath, `${title}-component/spec-integration/test.spec.js`));
   });
 
-  it('can generate action with dynamic metadata', () => {
-    before(async () => {
-      answers.mType = 'Dynamic';
-      await helpers.run(path.join(__dirname, '../generators/action'))
-        .inTmpDir((dir) => {
-          // `dir` is the path to the new temporary directory
-          fs.writeFileSync(`${dir}/component.json`, '{}', 'utf8');
-        })
-        .withPrompts(answers)
-        .on('ready', (generator) => {
-          // eslint-disable-next-line no-param-reassign
-          generator.conflicter.force = true;
-        });
-    });
-
-    it('creates files', () => {
-      assert.file([
-        'component.json',
-        'lib/actions/myTestID.js',
-      ]);
-      assert.noFile([
-        'lib/schemas/myTestID.in.json',
-        'lib/schemas/myTestID.out.json',
-      ]);
-      assert.jsonFileContent('component.json', {
-        actions: {
-          myTestID: {
-            title: 'My New Action',
-            main: './lib/actions/myTestID.js',
-            dynamicMetadata: true,
-          },
-        },
+  it('Creates the correct files for dynamic actions', async () => {
+    const actionPath = path.join(dirPath, `${title}-component`);
+    await helpers.run(path.join(__dirname, '../generators/action'))
+      .inDir(actionPath)
+      .withPrompts({
+        id: 'test',
+        title: 'Test',
+        actionType: 'upsert',
+        mType: 'Dynamic',
       });
-    });
+    assert.file(path.join(dirPath, `${title}-component/lib/actions/test.js`));
+    assert.noFile(path.join(dirPath, `${title}-component/lib/schemas/test.in.json`));
+    assert.noFile(path.join(dirPath, `${title}-component/lib/schemas/test.out.json`));
+    assert.file(path.join(dirPath, `${title}-component/spec/test.spec.js`));
+    assert.file(path.join(dirPath, `${title}-component/spec-integration/test.spec.js`));
+
+    fs.unlinkSync(path.join(dirPath, `${title}-component/lib/actions/test.js`));
+    fs.unlinkSync(path.join(dirPath, `${title}-component/spec/test.spec.js`));
+    fs.unlinkSync(path.join(dirPath, `${title}-component/spec-integration/test.spec.js`));
   });
 });
