@@ -29,6 +29,7 @@ module.exports = class extends Generator {
     }, {
       type: 'confirm',
       name: 'addLogo',
+      default: 'N',
       message: 'Would you like to add a logo to your project now?',
     }];
 

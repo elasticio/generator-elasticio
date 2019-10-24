@@ -1,90 +1,104 @@
 const Generator = require('yeoman-generator');
 const chalk = require('chalk');
-const yosay = require('yosay');
-const _ = require('lodash');
 const mkdirp = require('mkdirp');
 const fs = require('fs');
+const _ = require('lodash');
+const { prompts } = require('./prompts');
+
+const ACTIONS_WITH_OBJECTS = ['lookupById', 'delete', 'lookupMany'];
 
 module.exports = class extends Generator {
   initializing() {
     try {
-      fs.accessSync(this.destinationPath('component.json'));
+      fs.existsSync(this.destinationPath('component.json'));
       this.compDesc = this.fs.readJSON(this.destinationPath('component.json'), {});
-      // Have Yeoman greet the user.
-      this.log(yosay(
-        `Welcome to the ${chalk.red('elastic.io action')} generator!`,
-      ));
+
+      this.log(`Welcome to the ${chalk.red('elastic.io action')} generator!`);
       this.log('Loaded component descriptor from %s', this.destinationPath('component.json'));
     } catch (error) {
-      this.log(yosay(`I can not find ${chalk.red('component.json')} in the current directory, `
-        + 'please run elasticio:action in the component root folder'));
+      this.log(`I can not find ${chalk.red('component.json')} in the current directory, please run elasticio:action in the component root folder`);
       throw error;
     }
   }
 
   async prompting() {
-    const prompts = [{
-      type: 'input',
-      name: 'title',
-      message: 'Please enter an actions title',
-      default: 'Upsert Something',
-      validate(str) {
-        return str.length > 0;
-      },
-    }, {
-      type: 'input',
-      name: 'id',
-      message: 'Please enter an action ID',
-      default(answers) {
-        return _.camelCase(answers.title);
-      },
-      validate(str) {
-        return str.length > 0;
-      },
-    }, {
-      type: 'list',
-      name: 'mType',
-      message: 'Please select the type of the metadata',
-      choices: [
-        {
-          name: 'Static (known at design time)',
-          short: 'Static',
-          value: 'Static',
-        },
-        {
-          name: 'Dynamic (fetched at run time)',
-          short: 'Dynamic',
-          value: 'Dynamic',
-        },
-      ],
-    }];
+    const prompt = prompts();
+    this.props = await this.prompt(prompt);
+    this.props.objects = [];
 
-    this.props = await this.prompt(prompts);
+    const promptObjects = async () => {
+      const objectType = await this.prompt([{
+        type: 'input',
+        name: 'objectType',
+        message: 'Object name:',
+      }, {
+        type: 'input',
+        name: 'objectName',
+        default(answers) {
+          return _.camelCase(answers.objectType);
+        },
+        message: 'Object internal name:',
+      }, {
+        type: 'confirm',
+        name: 'confirm',
+        message: 'Would you like to add another object?',
+      }]);
+      return objectType;
+    };
+
+    const { actionType } = this.props;
+    if (ACTIONS_WITH_OBJECTS.includes(actionType)) {
+      this.log('Please provide all the object types you would like this action to work with');
+      let newProps = await promptObjects();
+      this.props.objects.push({ [newProps.objectType]: newProps.objectName });
+      while (newProps.confirm) {
+        newProps = await promptObjects();
+        this.props.objects.push({ [newProps.objectType]: newProps.objectName });
+      }
+    }
   }
 
   writing() {
-    const { id } = this.props;
+    const { id, mType, actionType, title } = this.props;
     let actions = {};
     if (this.compDesc.actions) {
       actions = this.compDesc.actions;
     } else {
       this.compDesc.actions = actions;
     }
-    actions[this.props.id] = {
-      title: this.props.title,
+
+    actions[id] = {
+      title,
       main: `./lib/actions/${id}.js`,
-      description: `Description for ${this.props.title}`,
+      description: `Description for ${title}`,
     };
-    if (this.props.mType === 'Static') {
-      actions[this.props.id].metadata = {
+
+    if (mType === 'Static') {
+      actions[id].metadata = {
         in: `./lib/schemas/${id}.in.json`,
         out: `./lib/schemas/${id}.out.json`,
       };
     } else {
-      actions[this.props.id].dynamicMetadata = true;
+      actions[id].dynamicMetadata = true;
     }
 
-    if (this.props.mType === 'Static') {
+    if (ACTIONS_WITH_OBJECTS.includes(actionType)) {
+      actions[id].fields = {};
+      actions[id].fields.objectType = {
+        viewClass: 'SelectView',
+        label: 'Object Type',
+        required: true,
+        model: {},
+        prompt: 'Please select the object to look up',
+      };
+    }
+
+    this.props.objects.forEach((obj) => {
+      const key = Object.keys(obj)[0];
+      actions[id].fields.objectType.model[key] = obj[key];
+    });
+
+    if (mType === 'Static') {
       this.log('Creating schema files');
       mkdirp('lib/schemas');
       this.fs.copy(
@@ -99,9 +113,16 @@ module.exports = class extends Generator {
 
     this.log('Creating action file');
     mkdirp('lib/actions');
-    this.fs.copy(
-      this.templatePath('action.js'),
+    const actionFile = actionType;
+    this.log(actionFile);
+
+    this.fs.copyTpl(
+      this.templatePath(`${actionFile}.js`),
       this.destinationPath(`lib/actions/${id}.js`),
+      (() => {
+        if (mType === 'Static') return { metadata: '' };
+        return { metadata: 'exports.getMetaModel = async function getMetaModel(cfg) {};\n' };
+      })(),
     );
 
     this.log('Creating test');
@@ -109,6 +130,13 @@ module.exports = class extends Generator {
     this.fs.copy(
       this.templatePath('action.spec.js'),
       this.destinationPath(`spec/${id}.spec.js`),
+    );
+
+    this.log('Creating integration test');
+    mkdirp('spec-integration');
+    this.fs.copy(
+      this.templatePath('action.spec.js'),
+      this.destinationPath(`spec-integration/${id}.spec.js`),
     );
 
     this.fs.writeJSON(this.destinationPath('component.json'), this.compDesc);
